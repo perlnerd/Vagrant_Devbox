@@ -1,0 +1,13 @@
+127.0.0.1   vigorate-dev localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+127.0.1.1   cgilders.local Vigorate-Centos-VM
+127.0.1.1   dev.dcm10.com
+127.0.1.1   dev.conquest.dcm10.com
+127.0.1.1   dev.pentasa.dcm10.com
+127.0.1.1   dev.safeway-cfl.dcm10.com
+127.0.1.1   dev.harness.toraccess.com
+127.0.1.1   dev.toraccess.com
+127.0.1.1   dev.vigorateditial.com
+127.0.1.1   dev.blog.vigorateditial.com
+127.0.0.1   dev.labclosures.dcm10.com
+127.0.0.1   rabbitmq.vigoratedigital.com
