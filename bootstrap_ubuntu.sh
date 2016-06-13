@@ -2,9 +2,10 @@
 source /vagrant/config_ubuntu.sh
 ##
 #  configure apt to use rabbitMQ repo  
-##
+##  
+echo 'deb http://www.rabbitmq.com/debian/ testing main' | sudo tee /etc/apt/sources.list.d/rabbitmq.list
+wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | sudo apt-key add -
 
-sudo bash -c "echo 'deb http://ubuntu.ss/vendors binary/' >> /etc/apt/sources.list"
 
 ##
 # Install required software
@@ -60,7 +61,7 @@ echo "vagrant:vagrant"|sudo chpasswd
 
 cat <<EOF
 ############################################
-Your Vigorate Virtual Development Machine is
+Your Virtual Development Machine is
 now configured.
 
 The VM's IP address is ${IPADDRESS}
