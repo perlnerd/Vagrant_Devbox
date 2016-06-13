@@ -14,7 +14,7 @@ Vagrant.configure(2) do |config|
   config.vm.provision "shell", path: "bootstrap_ubuntu.sh"
   config.vm.hostname = "ubuntu-dev"
   config.vm.network "forwarded_port", guest: 80, host: 8080
-  config.vm.network "public_network", type: "dhcp"
+  config.vm.network "public_network", type: "dhcp", :public_network => "en0"
   config.vm.network "private_network", type: "dhcp"
   config.vm.synced_folder "~/Sites/os", "/OS"
   config.vm.box_check_update = false

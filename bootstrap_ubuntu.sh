@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+DEBIAN_FRONTEND=noninteractive
+debconf-set-selections <<< 'mysql-server mysql-server/root_password password pass'
+debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password pass'
 source /vagrant/config_ubuntu.sh
 ##
 #  configure apt to use rabbitMQ repo  
