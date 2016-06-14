@@ -7,8 +7,9 @@ source /vagrant/config_ubuntu.sh
 #  configure apt to use rabbitMQ repo  
 ##  
 echo 'deb http://www.rabbitmq.com/debian/ testing main' | sudo tee /etc/apt/sources.list.d/rabbitmq.list
+echo 'deb http://packages.erlang-solutions.com/debian precise contrib' | sudo tee /etc/apt/sources.list.d/erlang.list
 wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | sudo apt-key add -
-
+wget -O- http://packages.erlang-solutions.com/ubuntu/erlang_solutions.asc | sudo apt-key add -
 
 ##
 # Install required software
@@ -43,9 +44,6 @@ IPADDRESS=$(ip addr | grep 'state UP' -A2 | tail -n5 | head -n1 | awk '{print $2
 
 #Configure apparmor to allow you to write to /${SENDBOX_OUTFILES_DIR} with mysql
 sudo bash -c "cat > ${APPARMOR_MYSQLD_FILE} <<EOF
-  ${SENDBOX_WORK_DIR}/${SENDBOX_OUTFILE_DIR}/** rw,
-  ${GREENARROW_WORK_DIR}/${SEND_DATA_DIR}/** rw,
-  ${GREENARROW_WORK_DIR}/${SEND_DATA_DIR}/** rw,
   /home/${SERVER_USERNAME}/** r,
   /${SERVER_USERNAME}/** r,
 EOF"
@@ -57,11 +55,30 @@ echo "alias reloadhttpd=\"echo 'Reloading Apache' && sudo cp /github/vagrant-dev
  >> /home/vagrant/.bashrc
 source /home/vagrant/.bashrc
 
-echo 'Linking /github to /home/vagrant/github'
-ln -s /github /home/vagrant/github
+
+echo 'Linking /OS to /home/vagrant/Sites/os'
+mkdir ~vagrant/Sites && chown vagrant:vagrant ~vagrant/Sites
+ln -s /OS ~vagrant/Sites/os
 
 echo "vagrant:vagrant"|sudo chpasswd
 
+sudo service php5-fpm restart;
+sudo rabbitmq-plugins enable rabbitmq_management;
+sudo service rabbitmq-server restart;
+sudo rabbitmqctl add_user vagrant_admin brew4.haloes;
+sudo rabbitmqctl set_user_tags vagrant_admin administrator;
+sudo rabbitmqctl set_permissions -p / vagrant_admin ".*" ".*" ".*";
+
+echo "Copying and activating nginx config"
+sudo cp /vagrant/os.nginx /etc/nginx/sites-available/
+sudo ln -s /etc/nginx/sites-available/os.nginx /etc/nginx/sites-enabled/os.nginx
+
+echo "Enabling query log in mysql"
+sudo cp /vagrant/data/my.cnf /etc/mysql/my.cnf
+sudo service mysql restart
+sudo service nginx restart
+
+mysql -u root -ppass -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY PASSWORD '*196BDEDE2AE4F84CA44C47D54D78478C7E2BD7B7' WITH GRANT OPTION"
 cat <<EOF
 ############################################
 Your Virtual Development Machine is
@@ -80,7 +97,7 @@ See /etc/httpd/conf/httpd.conf for example
 Virtual Host entries.
 
 RabbitMQ GUI is at http://${IPADDRESS}:15672
-u: vigorate_admin
+u: vagrant_admin
 p: brew4.haloes
 
 Edit the local httpd.conf and then run
