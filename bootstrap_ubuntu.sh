@@ -63,11 +63,12 @@ ln -s /OS ~vagrant/Sites/os
 echo "vagrant:vagrant"|sudo chpasswd
 
 sudo service php5-fpm restart;
-sudo rabbitmq-plugins enable rabbitmq_management;
-sudo service rabbitmq-server restart;
-sudo rabbitmqctl add_user vagrant_admin brew4.haloes;
-sudo rabbitmqctl set_user_tags vagrant_admin administrator;
-sudo rabbitmqctl set_permissions -p / vagrant_admin ".*" ".*" ".*";
+
+#sudo rabbitmq-plugins enable rabbitmq_management;
+#sudo service rabbitmq-server restart;
+#sudo rabbitmqctl add_user vagrant_admin brew4.haloes;
+#sudo rabbitmqctl set_user_tags vagrant_admin administrator;
+#sudo rabbitmqctl set_permissions -p / vagrant_admin ".*" ".*" ".*";
 
 echo "Copying and activating nginx config"
 sudo cp /vagrant/os.nginx /etc/nginx/sites-available/
